@@ -4,3 +4,5 @@ build
 output
 gradle
 tokens
+
+src/main/resources/credentials.json
