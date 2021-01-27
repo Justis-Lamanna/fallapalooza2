@@ -9,6 +9,9 @@ software, such as OBS.
 4. The first time it runs, the program will prompt you for credentials via a link in your command prompt. This is
 saved for subsequent uses, but expires after a month.
 
+Note that you can run the program with one argument, which is taken as the spreadsheet ID to pull from. It should
+be in *exactly* the same format as the original.
+
 ## Output
 All text files are placed in the `output` directory, created wherever the program was run from.
 
