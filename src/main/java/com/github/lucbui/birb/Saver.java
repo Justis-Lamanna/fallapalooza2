@@ -49,7 +49,7 @@ public class Saver {
 
         Round selectedRound = getSelectedRound(team);
         outputToFile(directory, "current_round_name", RoundUtils.getRoundName(selectedRound.getNumber()));
-        outputToFile(directory, "current_episode_number", team.getCurrentEpisode(selectedRound) + "/" + (selectedRound.isFinal() ? "5" : "3"));
+        outputToFile(directory, "current_episode_number", getSelectedEpisode(team) + "/" + (selectedRound.isFinal() ? "5" : "3"));
         outputToFile(directory, "current_round_total", selectedRound.getTotal());
         for (int player = 0; player < selectedRound.getScores().size(); player++) {
             Score score = selectedRound.getScores().get(player);
@@ -65,7 +65,16 @@ public class Saver {
             int round = Integer.parseInt(hardCodedRound) - 1;
             return team.getRounds().get(round);
         }
-        return team.getCurrentRound();
+        return team.getLastPlayedRound();
+    }
+
+    private int getSelectedEpisode(Team team) {
+        String hardCodedEpisode = System.getProperty("episode");
+        if(hardCodedEpisode != null) {
+            return Integer.parseInt(hardCodedEpisode);
+        }
+
+        return team.getCurrentEpisode(getSelectedRound(team));
     }
 
     public void outputBracket(List<TournamentRound> rounds) throws IOException {

@@ -11,9 +11,12 @@ saved for subsequent uses, but expires after a month.
 
 ### System properties
 * `sheet` - Specify a custom sheet. Note that it must be in the exact same format as the original.
-* `round` - Force a specific round to be accepted as the custom one. If omitted, the program will do
+* `round` - Force a specific round to be accepted as the current one. If omitted, the program will do
 its best to figure out the current round. The current round is determined by figuring out the first
-in-progress or incomplete round. >> This is the variable you need to go back in time <<
+in-progress or incomplete round.
+* `episode` - Force a specific episode to be accepted as the current one. If omitted, the program will
+do its best to figure out the current episode. The current episode is determined by figuring out the first
+empty episode slot in the current round.
 
 ## Output
 All text files are placed in the `output` directory, created wherever the program was run from.
