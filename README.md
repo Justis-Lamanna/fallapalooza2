@@ -9,8 +9,11 @@ software, such as OBS.
 4. The first time it runs, the program will prompt you for credentials via a link in your command prompt. This is
 saved for subsequent uses, but expires after a month.
 
-Note that you can run the program with one argument, which is taken as the spreadsheet ID to pull from. It should
-be in *exactly* the same format as the original.
+### System properties
+* `sheet` - Specify a custom sheet. Note that it must be in the exact same format as the original.
+* `round` - Force a specific round to be accepted as the custom one. If omitted, the program will do
+its best to figure out the current round. The current round is determined by figuring out the first
+in-progress or incomplete round. >> This is the variable you need to go back in time <<
 
 ## Output
 All text files are placed in the `output` directory, created wherever the program was run from.

@@ -1,6 +1,6 @@
 package com.github.lucbui.birb.obj;
 
-import java.util.List;
+import java.util.*;
 
 public class Team {
     private final String name;
@@ -48,8 +48,30 @@ public class Team {
         return rounds.get(rounds.size() - 1);
     }
 
-    public int getCurrentEpisode() {
-        Round round = getCurrentRound();
+    public Round getLastPlayedRound() {
+        for(int idx = 0; idx < rounds.size(); idx++) {
+            Round round = rounds.get(idx);
+            RoundState roundState = round.getRoundState();
+            if(roundState.isInProgress() || roundState.isNotStarted()) {
+                boolean isEmpty = round.getScores().stream()
+                        .flatMap(score -> Arrays.stream(score.getScore()))
+                        .allMatch(Objects::isNull);
+                if(isEmpty) {
+                    if(idx > 0) {
+                        return rounds.get(idx - 1);
+                    } else {
+                        return rounds.get(0);
+                    }
+                } else {
+                    return round;
+                }
+            }
+        }
+        //Last round
+        return rounds.get(rounds.size() - 1);
+    }
+
+    public int getCurrentEpisode(Round round) {
         int scoreCount = round.isFinal() ? 5 : 3;
         return round.getScores().stream()
                 .map(Score::getScore)

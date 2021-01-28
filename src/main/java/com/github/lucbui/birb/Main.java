@@ -38,9 +38,8 @@ public class Main {
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
         Sheets sheets = createSheets();
-        Parser parser = new Parser(getSheet(args));
+        Parser parser = new Parser(getSheet());
         Saver saver = new Saver();
-
         new Thread(() -> {
             System.out.println("---Pulling Team Data---");
             try {
@@ -62,12 +61,8 @@ public class Main {
         }).start();
     }
 
-    private static String getSheet(String[] args) {
-        if(args.length < 1) {
-            System.out.println("---Using Default Spreadsheet---");
-            return DEFAULT_SPREADSHEET;
-        }
-        return args[0];
+    private static String getSheet() {
+        return System.getProperty("sheet", DEFAULT_SPREADSHEET);
     }
 
     private static Sheets createSheets() throws GeneralSecurityException, IOException {
