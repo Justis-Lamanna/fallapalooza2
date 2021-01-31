@@ -53,15 +53,8 @@ public class Team {
             Round round = rounds.get(idx);
             RoundState roundState = round.getRoundState();
             if(roundState.isInProgress() || roundState.isNotStarted()) {
-                boolean isEmpty = round.getScores().stream()
-                        .flatMap(score -> Arrays.stream(score.getScore()))
-                        .allMatch(Objects::isNull);
-                if(isEmpty) {
-                    if(idx > 0) {
-                        return rounds.get(idx - 1);
-                    } else {
-                        return rounds.get(0);
-                    }
+                if(round.isEmpty()) {
+                    return rounds.get(Math.max(0, idx - 1));
                 } else {
                     return round;
                 }

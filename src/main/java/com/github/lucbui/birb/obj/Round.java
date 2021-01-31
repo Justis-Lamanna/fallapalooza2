@@ -1,6 +1,8 @@
 package com.github.lucbui.birb.obj;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Round {
     private final int number;
@@ -33,6 +35,18 @@ public class Round {
 
     public boolean isFinal() {
         return number == 4;
+    }
+
+    public boolean isEmpty() {
+        return scores.stream()
+                .flatMap(score -> Arrays.stream(score.getScore()))
+                .allMatch(Objects::isNull);
+    }
+
+    public boolean isFull() {
+        return scores.stream()
+                .flatMap(score -> Arrays.stream(score.getScore()).limit(isFinal() ? 5 : 3))
+                .allMatch(Objects::nonNull);
     }
 
     @Override

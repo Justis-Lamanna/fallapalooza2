@@ -10,7 +10,7 @@ public class Saver {
     public static final File BASE = new File("output");
 
     public void outputTeams(List<Team> teams) throws IOException {
-        teams.stream()
+        teams.parallelStream()
                 .forEach(team -> {
                     try {
                         outputTeam(team, new File(BASE, "matches/team_" + team.getSeed()));
@@ -48,8 +48,18 @@ public class Saver {
         }
 
         Round selectedRound = getSelectedRound(team);
-        outputToFile(directory, "current_round_name", RoundUtils.getRoundName(selectedRound.getNumber()));
-        outputToFile(directory, "current_episode_number", getSelectedEpisode(team) + "/" + (selectedRound.isFinal() ? "5" : "3"));
+        Round nameNumberRound = selectedRound;
+        if(selectedRound.isFull()) {
+            int nextRound = selectedRound.getNumber() + 1;
+            List<Round> rounds = team.getRounds();
+            if(nextRound >= rounds.size()) {
+                nameNumberRound = rounds.get(rounds.size() - 1);
+            } else {
+                nameNumberRound = rounds.get(nextRound);
+            }
+        }
+        outputToFile(directory, "current_round_name", RoundUtils.getRoundName(nameNumberRound.getNumber()));
+        outputToFile(directory, "current_episode_number", getSelectedEpisode(team, nameNumberRound) + "/" + (nameNumberRound.isFinal() ? "5" : "3"));
         outputToFile(directory, "current_round_total", selectedRound.getTotal());
         for (int player = 0; player < selectedRound.getScores().size(); player++) {
             Score score = selectedRound.getScores().get(player);
@@ -68,13 +78,13 @@ public class Saver {
         return team.getLastPlayedRound();
     }
 
-    private int getSelectedEpisode(Team team) {
+    private int getSelectedEpisode(Team team, Round round) {
         String hardCodedEpisode = System.getProperty("episode");
         if(hardCodedEpisode != null) {
             return Integer.parseInt(hardCodedEpisode);
         }
 
-        return team.getCurrentEpisode(getSelectedRound(team));
+        return team.getCurrentEpisode(round);
     }
 
     public void outputBracket(List<TournamentRound> rounds) throws IOException {
