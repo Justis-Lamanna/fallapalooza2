@@ -5,92 +5,45 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ParserUtils {
-    public static String getSingleValue(ValueRange range) {
+    public static List<String> flatten(ValueRange range) {
         if(range == null) return null;
         List<List<Object>> contents = range.getValues();
-        if(contents == null || contents.get(0) == null) {
+        List<String> flattenedContents = new ArrayList<>();
+        if(contents != null) {
+            for(List<Object> subList : contents) {
+                if(subList != null) {
+                    for(Object obj : subList) {
+                        flattenedContents.add(Objects.toString(obj, null));
+                    }
+                }
+            }
+        }
+        return flattenedContents;
+    }
+
+    public static String getSingleValue(ValueRange range) {
+        List<String> flattened = flatten(range);
+        if(flattened.isEmpty()) {
             return null;
         }
-        return (String)contents.get(0).get(0);
+        return flattened.get(0);
     }
 
-    public static Integer getSingleValueInteger(ValueRange range, String field) {
-        try {
-            return getSingleValueInteger(range);
-        } catch (NumberFormatException ex) {
-            throw new RuntimeException("Error parsing field " + field + ": not a number", ex);
-        }
+    public static Integer getSingleValueInteger(ValueRange range) {
+        String strValue = getSingleValue(range);
+        return strValue == null ? null : Integer.valueOf(strValue);
     }
 
-    private static Integer getSingleValueInteger(ValueRange range) {
-        String str = getSingleValue(range);
-        return str == null ? null : Integer.valueOf(str);
+    public static List<String> getMultiValue(ValueRange range) {
+        return flatten(range);
     }
 
-    public static List<String> getMultiValue(ValueRange range, int size) {
-        if(range == null) return Collections.nCopies(size, null);
-        List<String> ret = new ArrayList<>();
-        List<List<Object>> contents = range.getValues();
-        if(contents == null) return Collections.nCopies(size, null);
-        for(List<Object> rows : contents) {
-            if(rows.isEmpty()) {
-                ret.add(null);
-            } else {
-                ret.add((String)rows.get(0));
-            }
-        }
-        if(ret.size() < size) {
-            for(int i = 0; i < size - ret.size(); i++) {
-                ret.add(null);
-            }
-        }
-        return ret;
-    }
-
-    public static List<String> getMultiValueHorizontal(ValueRange range, int size) {
-        if(range == null) return Collections.nCopies(size, null);
-        List<String> ret = new ArrayList<>();
-        List<List<Object>> contents = range.getValues();
-        if(contents == null) return Collections.nCopies(size, null);
-        List<Object> columns = contents.get(0);
-        for(Object column : columns) {
-            ret.add((String)column);
-        }
-        if(ret.size() < size) {
-            for(int i = 0; i < size - ret.size(); i++) {
-                ret.add(null);
-            }
-        }
-        return ret;
-    }
-
-    private static List<Integer> getMultiValueInteger(ValueRange range, int size) {
-        if(range == null) return Collections.nCopies(size, null);
-        List<Integer> ret = new ArrayList<>();
-        List<List<Object>> contents = range.getValues();
-        if(contents == null) return Collections.nCopies(size, null);
-        for(List<Object> rows : contents) {
-            if(rows.isEmpty()) {
-                ret.add(null);
-            } else {
-                ret.add(Integer.valueOf((String)rows.get(0)));
-            }
-        }
-        if(ret.size() < size) {
-            for(int i = 0; i < size - ret.size(); i++) {
-                ret.add(null);
-            }
-        }
-        return ret;
-    }
-
-    public static List<Integer> getMultiValueInteger(ValueRange range, int size, String field) {
-        try {
-            return getMultiValueInteger(range, size);
-        } catch (NumberFormatException ex) {
-            throw new RuntimeException("Error parsing field " + field + ": not a number", ex);
-        }
+    public static List<Integer> getMultiValueInteger(ValueRange range) {
+        List<String> strValue = getMultiValue(range);
+        return strValue == null ? null : strValue.stream().map(Integer::valueOf).collect(Collectors.toList());
     }
 }

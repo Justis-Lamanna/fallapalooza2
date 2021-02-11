@@ -1,0 +1,72 @@
+spreadsheetId: 1gyIPIDpG8p8bAclC7pdpqAlMoke2DYqgHa61hfBCIAw
+scorecardSheetName: Scorecard
+bracketSheetName: Bracket
+
+numberOfTeams: 32
+playersPerTeam: 2
+rounds:
+  - numberOfEpisodes: 3
+  - numberOfEpisodes: 3
+  - numberOfEpisodes: 3
+  - numberOfEpisodes: 3
+  - numberOfEpisodes: 5
+
+origin:
+  row: 12
+  col: 2
+
+teamCard:
+  height: 10
+  teamName:
+    row: 0
+    col: 1
+  teamColor:
+    row: 0
+    col: 2
+  teamServer:
+    row: 0
+    col: 3
+  teamDisplay:
+    row: 7
+    col: 3
+  teamSeed:
+    row: 8
+    col: 3
+  playerName:
+    row: 2
+    col: 1
+    direction: VERTICAL
+  playerPronouns:
+    row: 2
+    col: 2
+    direction: VERTICAL
+  playerDiscord:
+    row: 2
+    col: 3
+    direction: VERTICAL
+  playerCrowns:
+    row: 5
+    col: 1
+    direction: VERTICAL
+  playerAchievement:
+    row: 5
+    col: 2
+    direction: VERTICAL
+  playerTwitter:
+    row: 5
+    col: 3
+    direction: VERTICAL
+  playerTwitch:
+    row: 7
+    col: 1
+    direction: VERTICAL
+  roundScore:
+    row: 2
+    col: 5
+    direction: VERTICAL
+  roundTotal:
+    row: 7
+    col: 5
+  roundStatus:
+    row: 7
+    col: 6

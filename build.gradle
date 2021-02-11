@@ -10,6 +10,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 version = '1.0'
 
+application {
+    mainClassName = 'com.github.lucbui.birb.Main'
+}
+
 repositories {
     mavenCentral()
 }
@@ -20,7 +24,17 @@ dependencies {
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.31.4'
     compile 'com.google.apis:google-api-services-sheets:v4-rev581-1.25.0'
 
+    //YAML
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1'
+
     compile 'com.github.rholder:gradle-one-jar:1.0.4'
+
+    //Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
 task jarify(type: OneJar) {

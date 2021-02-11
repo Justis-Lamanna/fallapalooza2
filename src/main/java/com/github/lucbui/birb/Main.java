@@ -1,5 +1,7 @@
 package com.github.lucbui.birb;
 
+import com.github.lucbui.birb.config.ConfigService;
+import com.github.lucbui.birb.config.FallapaloozaConfig;
 import com.github.lucbui.birb.obj.Team;
 import com.github.lucbui.birb.obj.TournamentRound;
 import com.google.api.client.auth.oauth2.Credential;
@@ -24,7 +26,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
-    private static final String APPLICATION_NAME = "Secret Birb Project Mk II";
+    private static final String APPLICATION_NAME = "Secret Birb Project Mk III";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
     public static final String DEFAULT_SPREADSHEET = "1j12zbCvJal-W-ZpTdwoD8nyGafMwVJ_iqM1cMM5F5DQ";
@@ -37,32 +39,26 @@ public class Main {
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
-        Sheets sheets = createSheets();
-        Parser parser = new Parser(getSheet());
+        FallapaloozaConfig config = ConfigService.getConfig();
+
+        if(System.getProperty("sheet") != null) {
+            config.setSpreadsheetId(System.getProperty("sheet"));
+        }
+
+        Parser parser = new Parser(config);
         Saver saver = new Saver();
-        new Thread(() -> {
+
+        Sheets sheets = createSheets();
+
+        try {
             System.out.println("---Pulling Team Data---");
-            try {
-                List<Team> teams = parser.getTeams(sheets);
-                saver.outputTeams(teams);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-        new Thread(() -> {
+            List<Team> teams = parser.getTeams(sheets);
             System.out.println("---Pulling Bracket Data---");
-            try {
-                List<TournamentRound> rounds = parser.getTournamentRounds(sheets);
-                saver.outputBracket(rounds);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-    }
-
-    private static String getSheet() {
-        return System.getProperty("sheet", DEFAULT_SPREADSHEET);
+            List<TournamentRound> rounds = parser.getTournamentRounds(sheets);
+            System.out.println("---Outputting to Files---");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Sheets createSheets() throws GeneralSecurityException, IOException {

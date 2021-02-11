@@ -1,5 +1,9 @@
 package com.github.lucbui.birb.obj;
 
+import com.github.lucbui.birb.config.Direction;
+
+import java.util.Random;
+
 public class Point {
     private final int row;
     private final int col;
@@ -31,6 +35,10 @@ public class Point {
 
     public Range toCol(int relativeCol) {
         return new Range(this, addCol(relativeCol));
+    }
+
+    public Range toRelative(int relative, Direction direction) {
+        return direction == Direction.HORIZONTAL ? toCol(relative) : toRow(relative);
     }
 
     public String toExcel() {
