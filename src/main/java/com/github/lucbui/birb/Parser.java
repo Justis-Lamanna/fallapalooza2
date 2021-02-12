@@ -1,7 +1,6 @@
 package com.github.lucbui.birb;
 
-import com.github.lucbui.birb.config.FallapaloozaConfig;
-import com.github.lucbui.birb.config.TeamCardConfig;
+import com.github.lucbui.birb.config.*;
 import com.github.lucbui.birb.obj.*;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.BatchGetValuesResponse;
@@ -18,19 +17,11 @@ public class Parser {
         this.config = config;
     }
 
-    private int getWindowSize() {
-        return
-                3 + //Static fields: Team Name, Display, Seed
-                config.getPlayersPerTeam() + //Player dynamic (one per player) Name + Name w/ Pronouns
-                (config.getNumberOfRounds() * 2) + //Round dynamic (one per round) Total, Status
-                (config.getPlayersPerTeam() * config.getNumberOfRounds()); //Player/Round dynamic (one per player per round) Score
-    }
-
     public List<Team> getTeams(Sheets sheets) throws IOException {
         List<Team> list = new ArrayList<>();
         List<String> ranges = new ArrayList<>();
         for(int teamNum = 0; teamNum < config.getNumberOfTeams(); teamNum++) {
-            List<String> teamRanges = getRanges(teamNum);
+            List<String> teamRanges = getTeamRanges(teamNum);
             ranges.addAll(teamRanges);
         }
         BatchGetValuesResponse response = sheets.spreadsheets()
@@ -47,16 +38,15 @@ public class Parser {
 //            }
 //        }
 
-        int window = getWindowSize();
-        int numWindows = response.getValueRanges().size() / window;
-        for(int windowIdx = 0; windowIdx < numWindows; windowIdx++) {
+        int window = ranges.size() / config.getNumberOfTeams();
+        for(int windowIdx = 0; windowIdx < config.getNumberOfTeams(); windowIdx++) {
             String s = response.getValueRanges()
                     .subList(windowIdx * window, (windowIdx + 1) * window)
                     .stream()
                     .map(ParserUtils::flatten)
                     .map(Objects::toString)
                     .collect(Collectors.joining(","));
-            System.out.println(s);
+            System.out.println("Team " + windowIdx + ":" + s);
         }
 
         return list;
@@ -141,39 +131,51 @@ public class Parser {
         return rounds;
     }
 
-    private List<String> getRanges(int teamNumber) {
-        TeamCardConfig teamCardConfig = config.getTeamCard();
+    private List<String> getTeamRanges(int teamNumber) {
+        TeamConfig team = config.getTeamCard().getTeam();
+        TeamPlayerConfig player = config.getTeamCard().getPlayer();
+        TeamRoundConfig round = config.getTeamCard().getRound();
+
         String scorecardSheetName = config.getScorecardSheetName();
         Point origin = config.getOrigin().toPoint()
-                .addRow(teamNumber * teamCardConfig.getHeight());
+                .addRow(teamNumber * config.getTeamCard().getHeight());
+
+        //Begin fields
         List<String> ranges = new ArrayList<>();
-        //Constants
-        ranges.add(origin.add(teamCardConfig.getTeamName().toPoint())
+        //Team Name
+        ranges.add(origin.add(team.getName().toPoint())
                 .toExcelWithSheet(scorecardSheetName));
-        ranges.add(origin.add(teamCardConfig.getTeamSeed().toPoint())
+        //Team Seed #
+        ranges.add(origin.add(team.getSeed().toPoint())
                 .toExcelWithSheet(scorecardSheetName));
-        ranges.add(origin.add(teamCardConfig.getTeamDisplay().toPoint())
+        //Team Display #
+        ranges.add(origin.add(team.getDisplay().toPoint())
                 .toExcelWithSheet(scorecardSheetName));
-        ranges.add(origin.add(teamCardConfig.getPlayerName().toPoint())
-                .toRelative(config.getPlayersPerTeam() - 1, teamCardConfig.getPlayerName().getDirection())
+        //Player Names
+        ranges.add(origin.add(player.getName().toPoint())
+                .toRelative(config.getPlayersPerTeam() - 1,
+                        player.getName().getDirection())
                 .toExcelWithSheet(scorecardSheetName));
-        ranges.add(origin.add(teamCardConfig.getPlayerPronouns().toPoint())
-                .toRelative(config.getPlayersPerTeam() - 1, teamCardConfig.getPlayerPronouns().getDirection())
+        //Player Pronouns
+        ranges.add(origin.add(player.getPronouns().toPoint())
+                .toRelative(config.getPlayersPerTeam() - 1,
+                        player.getPronouns().getDirection())
                 .toExcelWithSheet(scorecardSheetName));
 
-        for(int round = 0; round < config.getNumberOfRounds(); round++) {
-            int columnModifier = config.getPlayersPerTeam() * round;
-            for(int player = 0; player < config.getPlayersPerTeam(); player++) {
-                Range scoreRange = origin.add(teamCardConfig.getRoundScore().toPoint())
+        for(int roundNumber = 0; roundNumber < config.getNumberOfRounds(); roundNumber++) {
+            int columnModifier = config.getPlayersPerTeam() * roundNumber;
+            for(int playerNumber = 0; playerNumber < config.getPlayersPerTeam(); playerNumber++) {
+                Range scoreRange = origin.add(round.getScore().toPoint())
                         .addCol(columnModifier)
-                        .addCol(player)
-                        .toRelative(config.getRoundConfig(round).getNumberOfEpisodes() - 1, teamCardConfig.getRoundScore().getDirection());//roundOrigin.addCol(player).addRow(2);
+                        .addCol(playerNumber)
+                        .toRelative(config.getRoundConfig(roundNumber).getNumberOfEpisodes() - 1,
+                                round.getScore().getDirection());
                 ranges.add(scoreRange.toExcelWithSheet(config.getScorecardSheetName()));
             }
-            ranges.add(origin.add(teamCardConfig.getRoundTotal().toPoint())
+            ranges.add(origin.add(round.getTotal().toPoint())
                     .addCol(columnModifier)
                     .toExcelWithSheet(config.getScorecardSheetName()));
-            ranges.add(origin.add(teamCardConfig.getRoundStatus().toPoint())
+            ranges.add(origin.add(round.getStatus().toPoint())
                     .addCol(columnModifier)
                     .toExcelWithSheet(config.getScorecardSheetName()));
         }
