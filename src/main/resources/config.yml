@@ -72,30 +72,40 @@ bracket:
     - col: 2
       rows: [3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 57, 59, 61, 63, 65]
       name: Round 1
+      teamCardRoundIdx: 0
     - col: 5
       rows: [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64]
       name: Round 2
+      teamCardRoundIdx: 1
     - col: 8
       rows: [6, 14, 22, 30, 38, 46, 54, 62]
       name: Quarterfinals
+      teamCardRoundIdx: 2
     - col: 11
       rows: [10, 26, 42, 58]
       name: Semifinals
+      teamCardRoundIdx: 3
     - col: 14
       rows: [60, 64]
       name: 3rd Place
+      teamCardRoundIdx: 4
     - col: 14
       rows: [18, 50]
       name: Finals
+      teamCardRoundIdx: 4
     - col: 17
       rows: [33]
       name: First Place
+      teamCardRoundIdx: -1
     - col: 17
       rows: [35]
       name: Second Place
+      teamCardRoundIdx: -1
     - col: 17
       rows: [61]
       name: Third Place
+      teamCardRoundIdx: -1
     - col: 17
       rows: [63]
       name: Fourth Place
+      teamCardRoundIdx: -1

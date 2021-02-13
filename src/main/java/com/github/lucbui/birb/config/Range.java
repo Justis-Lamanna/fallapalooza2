@@ -1,4 +1,4 @@
-package com.github.lucbui.birb.obj;
+package com.github.lucbui.birb.config;
 
 public class Range {
     private final Point start;

@@ -7,4 +7,5 @@ public class BracketCellConfig {
     private int col;
     private int[] rows;
     private String name;
+    private int teamCardRoundIdx;
 }

@@ -1,8 +1,4 @@
-package com.github.lucbui.birb.obj;
-
-import com.github.lucbui.birb.config.Direction;
-
-import java.util.Random;
+package com.github.lucbui.birb.config;
 
 public class Point {
     private final int row;

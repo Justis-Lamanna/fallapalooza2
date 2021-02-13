@@ -1,22 +1,10 @@
 package com.github.lucbui.birb.obj;
 
+import lombok.Data;
+
 import java.util.Arrays;
 
+@Data
 public class Score {
     private final Integer[] score;
-
-    public Score(Integer[] score) {
-        this.score = score;
-    }
-
-    public Integer[] getScore() {
-        return score;
-    }
-
-    @Override
-    public String toString() {
-        return "Score{" +
-                "score=" + Arrays.toString(score) +
-                '}';
-    }
 }

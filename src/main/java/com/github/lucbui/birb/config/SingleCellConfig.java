@@ -1,6 +1,5 @@
 package com.github.lucbui.birb.config;
 
-import com.github.lucbui.birb.obj.Point;
 import lombok.Data;
 
 @Data
