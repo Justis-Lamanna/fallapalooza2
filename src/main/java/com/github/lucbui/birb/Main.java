@@ -39,12 +39,6 @@ public class Main {
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
-        FallapaloozaConfig config = ConfigService.getConfig();
-
-        if(System.getProperty("sheet") != null) {
-            config.setSpreadsheetId(System.getProperty("sheet"));
-        }
-
         Parser parser = new Parser();
 
         Sheets sheets = createSheets();
@@ -52,8 +46,10 @@ public class Main {
         try {
             System.out.println("---Pulling Team Data---");
             List<Team> teams = parser.getTeams(sheets);
+            teams.forEach(System.out::println);
             System.out.println("---Pulling Bracket Data---");
             List<TournamentRound> rounds = parser.getTournamentRounds(sheets);
+            rounds.forEach(System.out::println);
             System.out.println("---Outputting to Files---");
         } catch (IOException e) {
             e.printStackTrace();

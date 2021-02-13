@@ -8,9 +8,16 @@ import java.io.IOException;
 public class ConfigService {
     private static FallapaloozaConfig config = null;
 
-    public static FallapaloozaConfig getConfig() throws IOException {
+    public static FallapaloozaConfig getConfig() {
         if(config == null) {
-            config = readConfig();
+            try {
+                config = readConfig();
+                if(System.getProperty("sheet") != null) {
+                    config.setSpreadsheetId(System.getProperty("sheet"));
+                }
+            } catch (IOException ex) {
+                throw new IllegalStateException("Unable to read config", ex);
+            }
         }
         return config;
     }

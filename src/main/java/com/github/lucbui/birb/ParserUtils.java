@@ -48,6 +48,9 @@ public class ParserUtils {
     }
 
     public static <X> List<X> pad(List<X> list, int size, X padWith) {
+        if(list == null) {
+            return Collections.nCopies(size, padWith);
+        }
         if(list.size() == size) {
             return list;
         } else if(list.size() > size) {

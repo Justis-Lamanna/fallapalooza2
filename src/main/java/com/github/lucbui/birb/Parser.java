@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 public class Parser {
     private final FallapaloozaConfig config;
 
-    public Parser() throws IOException {
+    public Parser() {
         this.config = ConfigService.getConfig();
     }
 
