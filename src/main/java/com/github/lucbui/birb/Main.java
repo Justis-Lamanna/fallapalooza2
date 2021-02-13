@@ -45,8 +45,7 @@ public class Main {
             config.setSpreadsheetId(System.getProperty("sheet"));
         }
 
-        Parser parser = new Parser(config);
-        Saver saver = new Saver();
+        Parser parser = new Parser();
 
         Sheets sheets = createSheets();
 

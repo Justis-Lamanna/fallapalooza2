@@ -15,8 +15,8 @@ import java.util.stream.IntStream;
 public class Parser {
     private final FallapaloozaConfig config;
 
-    public Parser(FallapaloozaConfig config) {
-        this.config = config;
+    public Parser() throws IOException {
+        this.config = ConfigService.getConfig();
     }
 
     private BatchGetValuesResponse getFromSpreadsheet(Sheets sheets, List<String> ranges) throws IOException {
