@@ -52,7 +52,7 @@ public class Main {
 
         try {
             System.out.println("---Pulling Team Data---");
-            //List<Team> teams = parser.getTeams(sheets);
+            List<Team> teams = parser.getTeams(sheets);
             System.out.println("---Pulling Bracket Data---");
             List<TournamentRound> rounds = parser.getTournamentRounds(sheets);
             System.out.println("---Outputting to Files---");

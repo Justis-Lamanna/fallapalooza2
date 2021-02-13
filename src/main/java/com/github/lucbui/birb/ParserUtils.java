@@ -46,4 +46,17 @@ public class ParserUtils {
         List<String> strValue = getMultiValue(range);
         return strValue == null ? null : strValue.stream().map(Integer::valueOf).collect(Collectors.toList());
     }
+
+    public static <X> List<X> pad(List<X> list, int size, X padWith) {
+        if(list.size() == size) {
+            return list;
+        } else if(list.size() > size) {
+            return list.subList(0, size);
+        } else {
+            while(list.size() < size) {
+                list.add(padWith);
+            }
+            return list;
+        }
+    }
 }

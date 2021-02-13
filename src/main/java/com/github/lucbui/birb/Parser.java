@@ -37,14 +37,9 @@ public class Parser {
         List<Team> list = new ArrayList<>();
         int window = ranges.size() / config.getNumberOfTeams();
         for(int teamNumber = 0; teamNumber < config.getNumberOfTeams(); teamNumber++) {
-            //Temporary processing code
-            String s = response.getValueRanges()
-                    .subList(teamNumber * window, (teamNumber + 1) * window)
-                    .stream()
-                    .map(ParserUtils::flatten)
-                    .map(Objects::toString)
-                    .collect(Collectors.joining(","));
-            System.out.println("Team " + teamNumber + ":" + s);
+            Team team = TeamBuilder.fromExcel(response.getValueRanges()
+                    .subList(teamNumber * window, (teamNumber + 1) * window));
+            list.add(team);
         }
 
         return list;
@@ -63,14 +58,9 @@ public class Parser {
         for(BracketCellConfig cellConfig : config.getBracket().getCells()) {
             //Temporary processing code
             int entries = cellConfig.getRows().length;
-            String s = response.getValueRanges()
-                    .subList(start, start + entries)
-                    .stream()
-                    .map(ParserUtils::flatten)
-                    .map(Objects::toString)
-                    .collect(Collectors.joining(","));
+            TournamentRound round = RoundsBuilder.fromExcel(response.getValueRanges()
+                    .subList(start, start + entries));
             start += entries;
-            System.out.println(cellConfig.getName() + "-" + s);
         }
 
         return rounds;
