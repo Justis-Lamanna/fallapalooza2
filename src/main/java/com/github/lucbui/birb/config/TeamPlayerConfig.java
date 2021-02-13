@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class TeamPlayerConfig {
-    private SingleRowColumnConfig name;
-    private SingleRowColumnConfig pronouns;
-    private SingleRowColumnConfig discord;
-    private SingleRowColumnConfig crowns;
-    private SingleRowColumnConfig achievement;
-    private SingleRowColumnConfig twitter;
-    private SingleRowColumnConfig twitch;
+    private MultiByOriginDirection name;
+    private MultiByOriginDirection pronouns;
+    private MultiByOriginDirection discord;
+    private MultiByOriginDirection crowns;
+    private MultiByOriginDirection achievement;
+    private MultiByOriginDirection twitter;
+    private MultiByOriginDirection twitch;
 }

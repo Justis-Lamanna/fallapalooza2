@@ -5,21 +5,18 @@ import lombok.Data;
 @Data
 public class FallapaloozaConfig {
     private String spreadsheetId;
-    private String scorecardSheetName;
-    private String bracketSheetName;
 
     private int numberOfTeams;
     private int playersPerTeam;
-    private RoundConfig[] rounds;
 
-    private SingleCellConfig origin;
     private TeamCardConfig teamCard;
+    private BracketConfig bracket;
 
     public int getNumberOfRounds() {
-        return rounds.length;
+        return teamCard.getRound().getEpisodeCount().size();
     }
 
-    public RoundConfig getRoundConfig(int round) {
-        return rounds[round];
+    public int getEpisodeCountForRound(int idx) {
+        return teamCard.getRound().getEpisodeCount().get(idx);
     }
 }

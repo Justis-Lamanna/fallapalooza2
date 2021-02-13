@@ -5,6 +5,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SingleRowColumnConfig extends SingleCellConfig {
+public class MultiByOriginDirection extends SingleCellConfig {
     private Direction direction;
 }
