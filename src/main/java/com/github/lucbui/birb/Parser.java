@@ -1,5 +1,7 @@
 package com.github.lucbui.birb;
 
+import com.github.lucbui.birb.builder.RoundsBuilder;
+import com.github.lucbui.birb.builder.TeamBuilder;
 import com.github.lucbui.birb.config.*;
 import com.github.lucbui.birb.obj.*;
 import com.google.api.services.sheets.v4.Sheets;
@@ -26,40 +28,35 @@ public class Parser {
     }
 
     public List<Team> getTeams(Sheets sheets) throws IOException {
-        List<String> ranges = new ArrayList<>();
-        for(int teamNum = 0; teamNum < config.getNumberOfTeams(); teamNum++) {
-            List<String> teamRanges = getTeamRanges(teamNum);
-            ranges.addAll(teamRanges);
-        }
+        List<String> ranges = IntStream.range(0, config.getNumberOfTeams())
+                .mapToObj(this::getTeamRanges)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
 
         BatchGetValuesResponse response = getFromSpreadsheet(sheets, ranges);
 
-        List<Team> list = new ArrayList<>();
         int window = ranges.size() / config.getNumberOfTeams();
-        for(int teamNumber = 0; teamNumber < config.getNumberOfTeams(); teamNumber++) {
-            Team team = TeamBuilder.fromExcel(response.getValueRanges()
-                    .subList(teamNumber * window, (teamNumber + 1) * window));
-            list.add(team);
-        }
-
-        return list;
+        return IntStream.iterate(0, i -> i += window)
+                .limit(config.getNumberOfTeams())
+                .mapToObj(start -> TeamBuilder.fromExcel(response.getValueRanges().subList(start, start + window)))
+                .collect(Collectors.toList());
     }
 
     public List<TournamentRound> getTournamentRounds(Sheets sheets) throws IOException {
-        List<String> ranges = new ArrayList<>();
-        for(BracketCellConfig cellConfig : config.getBracket().getCells()) {
-            ranges.addAll(getRangesForRound(cellConfig));
-        }
+        List<String> ranges = config.getBracket().getCells()
+                .stream()
+                .map(this::getRangesForRound)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
 
         BatchGetValuesResponse response = getFromSpreadsheet(sheets, ranges);
 
         List<TournamentRound> rounds = new ArrayList<>();
         int start = 0;
         for(BracketCellConfig cellConfig : config.getBracket().getCells()) {
-            //Temporary processing code
             int entries = cellConfig.getRows().length;
-            TournamentRound round = RoundsBuilder.fromExcel(response.getValueRanges()
-                    .subList(start, start + entries));
+            rounds.add(RoundsBuilder.fromExcel(response.getValueRanges()
+                            .subList(start, start + entries)));
             start += entries;
         }
 
