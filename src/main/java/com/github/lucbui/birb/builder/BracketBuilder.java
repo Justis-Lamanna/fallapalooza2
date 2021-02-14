@@ -39,7 +39,7 @@ public class BracketBuilder {
     }
 
     private static BracketMatchup.Team parseTeam(Team team, int roundIdx) {
-        if(team == null) return null;
+        if(team == null) return BracketMatchup.Team.EMPTY_TEAM;
         return new BracketMatchup.Team(team.getName(), team.getPlayers(), team.getRounds().get(roundIdx));
     }
 }

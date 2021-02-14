@@ -56,6 +56,7 @@ public class Main {
                 System.out.println("----" + round.getName() + "----");
                 round.getMatchups().forEach(System.out::println);
             });
+            new Saver().save(bracket);
         } catch (IOException e) {
             e.printStackTrace();
         }
