@@ -1,7 +1,9 @@
 package com.github.lucbui.birb;
 
+import com.github.lucbui.birb.builder.BracketBuilder;
 import com.github.lucbui.birb.config.ConfigService;
 import com.github.lucbui.birb.config.FallapaloozaConfig;
+import com.github.lucbui.birb.obj.Bracket;
 import com.github.lucbui.birb.obj.Team;
 import com.github.lucbui.birb.obj.TournamentRound;
 import com.google.api.client.auth.oauth2.Credential;
@@ -46,11 +48,14 @@ public class Main {
         try {
             System.out.println("---Pulling Team Data---");
             List<Team> teams = parser.getTeams(sheets);
-            teams.forEach(System.out::println);
             System.out.println("---Pulling Bracket Data---");
             List<TournamentRound> rounds = parser.getTournamentRounds(sheets);
-            rounds.forEach(System.out::println);
             System.out.println("---Outputting to Files---");
+            Bracket bracket = BracketBuilder.process(teams, rounds);
+            bracket.getRounds().forEach(round -> {
+                System.out.println("----" + round.getName() + "----");
+                round.getMatchups().forEach(System.out::println);
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
