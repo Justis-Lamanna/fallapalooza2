@@ -10,4 +10,6 @@ public class TeamRoundConfig {
     private MultiByOriginDirection score;
     private SingleCellConfig total;
     private SingleCellConfig status;
+    private SingleCellConfig nameBadge;
+    private SingleCellConfig roundBadge;
 }

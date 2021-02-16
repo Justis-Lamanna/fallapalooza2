@@ -10,11 +10,14 @@ import java.util.Objects;
 @Data
 public class Round {
     public static final Round EMPTY_ROUND = new Round(-1, 0, RoundState.NP,
+            "1/3", "Round 1",
             Collections.nCopies(2, new Score(new Integer[]{0, 0, 0, 0, 0})));
 
     private final int number;
     private final int total;
     private final RoundState roundState;
+    private final String roundBadge;
+    private final String roundNameBadge;
     private final List<Score> scores;
 
     public boolean isFinal() {

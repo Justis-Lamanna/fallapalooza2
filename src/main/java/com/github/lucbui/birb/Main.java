@@ -42,6 +42,7 @@ public class Main {
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
         Parser parser = new Parser();
+        Saver saver = new Saver();
 
         Sheets sheets = createSheets();
 
@@ -56,7 +57,9 @@ public class Main {
                 System.out.println("----" + round.getName() + "----");
                 round.getMatchups().forEach(System.out::println);
             });
-            new Saver().save(bracket);
+
+            saver.save(teams);
+            saver.save(bracket);
         } catch (IOException e) {
             e.printStackTrace();
         }

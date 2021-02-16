@@ -43,12 +43,14 @@ public class TeamBuilder {
             List<Score> scores = new ArrayList<>();
             int numberOfScores = config.getTeamCard().getRound().getEpisodeCount().get(roundIdx);
             for(int playerIdx = 0; playerIdx < config.getPlayersPerTeam(); playerIdx++) {
-                List<Integer> indivScores = ParserUtils.pad(ParserUtils.getMultiValueInteger(iter.next()), numberOfScores, 0);
+                List<Integer> indivScores = ParserUtils.pad(ParserUtils.getMultiValueInteger(iter.next()), numberOfScores, null);
                 scores.add(new Score(indivScores.toArray(new Integer[0])));
             }
             Integer total = ParserUtils.getSingleValueInteger(iter.next());
             RoundState roundState = RoundState.parse(ParserUtils.getSingleValue(iter.next()));
-            rounds.add(new Round(roundIdx, total == null ? 0 : total, roundState, scores));
+            String roundNameBadge = ParserUtils.getSingleValue(iter.next());
+            String roundBadge = ParserUtils.getSingleValue(iter.next());
+            rounds.add(new Round(roundIdx, total == null ? 0 : total, roundState, roundBadge, roundNameBadge, scores));
         }
         return rounds;
     }

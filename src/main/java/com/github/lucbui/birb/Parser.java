@@ -110,6 +110,12 @@ public class Parser {
             ranges.add(origin.add(round.getStatus().toPoint())
                     .addCol(columnModifier)
                     .toExcelWithSheet(scorecardSheetName));
+            ranges.add(origin.add(round.getNameBadge().toPoint())
+                    .addCol(columnModifier)
+                    .toExcelWithSheet(scorecardSheetName));
+            ranges.add(origin.add(round.getRoundBadge().toPoint())
+                    .addCol(columnModifier)
+                    .toExcelWithSheet(scorecardSheetName));
         }
         return ranges;
     }

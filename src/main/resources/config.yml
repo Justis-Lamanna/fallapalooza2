@@ -65,6 +65,12 @@ teamCard:
     status:
       row: 7
       col: 6
+    nameBadge:
+      row: 8
+      col: 5
+    roundBadge:
+      row: 8
+      col: 6
 
 bracket:
   sheetName: Bracket
