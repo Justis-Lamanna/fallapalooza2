@@ -58,6 +58,7 @@ public class Main {
                 round.getMatchups().forEach(System.out::println);
             });
 
+            saver.initialize();
             saver.save(teams);
             saver.save(bracket);
         } catch (IOException e) {

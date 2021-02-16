@@ -8,4 +8,8 @@ import java.util.List;
 public class BracketRound {
     private final String name;
     private final List<BracketMatchup> matchups;
+
+    public boolean isWinnerRound() {
+        return name.endsWith("Place");
+    }
 }

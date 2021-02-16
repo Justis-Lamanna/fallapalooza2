@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -16,12 +17,33 @@ import java.util.stream.IntStream;
 public class Saver {
     private static final Pattern REPLACE_WITH_SPACE = Pattern.compile("\\s+");
     private static final File BASE = new File("output");
-    private static final File BRACKET = new File(BASE, "bracket");
+    private static final File BRACKET = new File(BASE, "tournament");
     private static final File DISPLAY = new File(BASE, "display");
-    private static final File TEAM = new File(BASE, "team");
+    private static final File TEAM = new File(BASE, "matches");
+
+    public void initialize() {
+        if(System.getProperty("clean") != null) {
+            System.out.println("Cleaning files...");
+            clean(BASE);
+            System.out.println("Complete");
+        }
+        BASE.mkdir();
+        BRACKET.mkdir();
+        DISPLAY.mkdir();
+        TEAM.mkdir();
+    }
+
+    private boolean clean(File directory) {
+        File[] allContents = directory.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                clean(file);
+            }
+        }
+        return directory.delete();
+    }
 
     public void save(Bracket bracket) {
-        BRACKET.mkdirs();
         bracket.getRounds().parallelStream()
                 .forEach(this::save);
     }
@@ -31,18 +53,28 @@ public class Saver {
                 .replaceAll("_");
         File roundDirectory = new File(BRACKET, filename);
         roundDirectory.mkdir();
-        IntStream.range(0, round.getMatchups().size())
-                .parallel()
-                .forEach(matchupIdx -> {
-                    File matchupDirectory = new File(roundDirectory, "matchup_" + (matchupIdx + 1));
-                    matchupDirectory.mkdir();
-                    BracketMatchup matchup = round.getMatchups().get(matchupIdx);
-                    IntStream.rangeClosed(1, 2)
-                            .parallel()
-                            .forEach(i -> {
-                                save(matchupDirectory, i == 1 ? matchup.getTeamOne() : matchup.getTeamTwo(), i);
-                            });
-                });
+        if(round.isWinnerRound()) {
+            BracketMatchup.Team team = round.getMatchups().get(0).getTeamOne();
+            outputToFile(roundDirectory, "name", team.getName());
+            outputToFile(roundDirectory, "total", team.getThisRound().getTotal());
+            IntStream.range(0, team.getPlayers().size())
+                    .parallel()
+                    .forEach(i -> outputPlayer(roundDirectory, team.getPlayers().get(i), i));
+        }
+        else {
+            IntStream.range(0, round.getMatchups().size())
+                    .parallel()
+                    .forEach(matchupIdx -> {
+                        File matchupDirectory = new File(roundDirectory, "matchup_" + (matchupIdx + 1));
+                        matchupDirectory.mkdir();
+                        BracketMatchup matchup = round.getMatchups().get(matchupIdx);
+                        IntStream.rangeClosed(1, 2)
+                                .parallel()
+                                .forEach(i -> {
+                                    save(matchupDirectory, i == 1 ? matchup.getTeamOne() : matchup.getTeamTwo(), i);
+                                });
+                    });
+        }
     }
 
     private void save(File directory, BracketMatchup.Team team, int teamNumber) {
@@ -65,13 +97,11 @@ public class Saver {
     }
 
     public void save(List<Team> teams) {
-        DISPLAY.mkdirs();
-        TEAM.mkdirs();
         for(Team team : teams) {
             if(team.getDisplay() != null) {
                 save(new File(DISPLAY, "display_" + team.getDisplay()), team);
             }
-            save(new File(TEAM, "seed_" + team.getSeed()), team);
+            save(new File(TEAM, "team_" + team.getSeed()), team);
         }
     }
 
@@ -95,8 +125,8 @@ public class Saver {
     }
 
     private void outputPlayer(File directory, Player player, int i) {
-        outputToFile(directory, "player_" + (i + 1), player.getName());
-        outputToFile(directory, "player_pronouns_" + (i + 1), player.getNameWithPronouns());
+        outputToFile(directory, "player_" + (i + 1) + "_name", player.getName());
+        outputToFile(directory, "player_" + (i + 1) + "_name_pronouns", player.getNameWithPronouns());
     }
 
     private void outputRound(File directory, Team team, Round round, boolean current) {
@@ -112,7 +142,7 @@ public class Saver {
                     IntStream.range(0, score.getScore().length)
                             .parallel()
                             .forEach(episode -> {
-                                String field = roundNumberStr + "_player_" + (i + 1) + "_episode_" + (episode + 1) + "_score";
+                                String field = roundNumberStr + "_player_" + (i + 1) + "_episode_" + (episode + 1);
                                 outputToFile(directory, field, score.getScore()[episode]);
                             });
                 });

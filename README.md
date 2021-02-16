@@ -12,14 +12,12 @@ saved for subsequent uses, but expires after a month.
 ### System properties
 * `sheet` - Specify a custom sheet. Note that it must be in the exact same format as the original.
 * `round` - Force a specific round to be accepted as the current one. If omitted, the program will do
-its best to figure out the current round. The current round is determined by figuring out the first
-in-progress or incomplete round.
-* `episode` - Force a specific episode to be accepted as the current one. If omitted, the program will
-do its best to figure out the current episode. The current episode is determined by figuring out the first
-empty episode slot in the current round.
+its best to figure out the current round. The current round will be determined by figuring out the first
+in-progress or incomplete round. If this round is empty, the previous round will be selected.
+* `clean` - Completely delete all output files before running this program.
 
 ## Output
-All text files are placed in the `output` directory, created wherever the program was run from.
+All text files will be placed in the `output` directory, created in the same directory as the program.
 
 Note that the program will not output 0 for any files - it will display as blank. All output has a space appended.
 
@@ -31,7 +29,8 @@ following files:
 * `player_#_name_pronouns` - The name of a player, plus their pronouns
 * `round_#_player_#_episode_#` - The score of a player, for a particular round and episode
 * `round_#_total` - The total score of both players for a particular round
-* `current_episode_number` - The current episode being played, in the format `<number>/3` or `<number>/5`. Note:
+* `round_#_episode` - The episode of that particular round that is being played
+* `current_round_episode` - The current episode being played, in the format `<number>/3` or `<number>/5`. Note:
 the round is not considered to have advanced unless both players have a score.
 * `current_round_name` - The current round being played (Round 1, Round 2, Quarterfinals, Semifinals, Finals)
 * `current_round_player_#_episode_#` - The score of a player, for a particular episode of the current round
@@ -39,19 +38,19 @@ the round is not considered to have advanced unless both players have a score.
 
 ### display/
 Identical to matches, but instead contains a directory for each team with a value in the `display` field, in the format
-`{display_number`. All files are identical to the `matches/` directory.
+`team_{display_number}`. All files are identical to the `matches/` directory.
 
 ### tournament/
 Displays a bracket view of the tournament. Unlike the previous version, the bracket is pulled from the spreadsheet, 
 rather than calculated by the program. The subdirectories are:
-* `round 1`
-* `round 2`
+* `round_1`
+* `round_2`
 * `quarterfinals`
 * `semifinals`
 * `finals`
-* `winners`
+* `first_place`,`second_place`,`third_place`,`fourth_place`
 
-In all except the `winners` directory, the output is as follows:
+In all except the last directory, the output is as follows:
 * `matchup_#_team_one_name` - The name of the first team in a matchup
 * `matchup_#_team_two_name` - The name of the second team in a matchup
 * `matchup_#_team_one_score` - The total score of the first team in a matchup
