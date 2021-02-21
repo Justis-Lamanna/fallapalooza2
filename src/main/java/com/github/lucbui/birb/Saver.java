@@ -49,8 +49,7 @@ public class Saver {
     }
 
     public void save(BracketRound round) {
-        String filename = REPLACE_WITH_SPACE.matcher(round.getName().toLowerCase())
-                .replaceAll("_");
+        String filename = round.getName().toLowerCase();
         File roundDirectory = new File(BRACKET, filename);
         roundDirectory.mkdir();
         if(round.isWinnerRound()) {
@@ -99,9 +98,8 @@ public class Saver {
     public void save(List<Team> teams) {
         for(Team team : teams) {
             if(team.getDisplay() != null) {
-                save(new File(DISPLAY, "display_" + team.getDisplay()), team);
+                save(new File(DISPLAY, Integer.toString(team.getDisplay())), team);
             }
-            save(new File(TEAM, "team_" + team.getSeed()), team);
         }
     }
 
