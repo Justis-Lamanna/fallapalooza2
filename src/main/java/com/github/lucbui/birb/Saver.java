@@ -64,35 +64,21 @@ public class Saver {
             IntStream.range(0, round.getMatchups().size())
                     .parallel()
                     .forEach(matchupIdx -> {
-                        File matchupDirectory = new File(roundDirectory, "matchup_" + (matchupIdx + 1));
-                        matchupDirectory.mkdir();
+                        String filenamePrefix = "matchup_" + matchupIdx + "_";
                         BracketMatchup matchup = round.getMatchups().get(matchupIdx);
                         IntStream.rangeClosed(1, 2)
                                 .parallel()
                                 .forEach(i -> {
-                                    save(matchupDirectory, i == 1 ? matchup.getTeamOne() : matchup.getTeamTwo(), i);
+                                    save(roundDirectory, filenamePrefix, i == 1 ? matchup.getTeamOne() : matchup.getTeamTwo(), i);
                                 });
                     });
         }
     }
 
-    private void save(File directory, BracketMatchup.Team team, int teamNumber) {
-        File teamDirectory = new File(directory, "team_" + teamNumber);
-        teamDirectory.mkdir();
-        outputToFile(teamDirectory, "name", team.getName());
-        outputToFile(teamDirectory, "total", team.getThisRound().getTotal());
-        IntStream.range(0, team.getPlayers().size())
-                .parallel()
-                .forEach(i -> {
-                    outputPlayer(teamDirectory, team.getPlayers().get(i), i);
-
-                    Score score = team.getThisRound().getScores().get(i);
-                    IntStream.range(0, score.getScore().length)
-                            .parallel()
-                            .forEach(episodeIdx -> {
-                                outputToFile(teamDirectory, "player_" + (i + 1) + "_episode_" + (episodeIdx + 1), score.getScore()[episodeIdx]);
-                            });
-                });
+    private void save(File directory, String prefix, BracketMatchup.Team team, int teamNumber) {
+        String morePrefix = prefix + "team_" + (teamNumber == 1 ? "one" : "two") + "_";
+        outputToFile(directory, morePrefix + "name", team.getName());
+        outputToFile(directory, morePrefix + "total", team.getThisRound().getTotal());
     }
 
     public void save(List<Team> teams) {
