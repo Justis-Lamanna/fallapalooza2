@@ -78,7 +78,7 @@ public class Saver {
     private void save(File directory, String prefix, BracketMatchup.Team team, int teamNumber) {
         String morePrefix = prefix + "team_" + (teamNumber == 1 ? "one" : "two") + "_";
         outputToFile(directory, morePrefix + "name", team.getName());
-        outputToFile(directory, morePrefix + "total", team.getThisRound().getTotal());
+        outputToFile(directory, morePrefix + "score", team.getThisRound().getTotal());
     }
 
     public void save(List<Team> teams) {

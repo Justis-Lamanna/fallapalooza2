@@ -20,10 +20,10 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation 'com.google.api-client:google-api-client:1.30.10'
-    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.31.4'
-    implementation 'com.google.apis:google-api-services-sheets:v4-rev581-1.25.0'
-    implementation 'com.google.auth:google-auth-library-oauth2-http:0.24.0'
+    compile 'com.google.api-client:google-api-client:1.30.10'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.31.4'
+    compile 'com.google.apis:google-api-services-sheets:v4-rev581-1.25.0'
+    //compile 'com.google.auth:google-auth-library-oauth2-http:0.24.0'
 
     //YAML
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1'
