@@ -152,7 +152,7 @@ public class Saver {
             if(Objects.equals(output, 0)) {
                 output = "";
             }
-            writer.write(Objects.toString(output + " ", ""));
+            writer.write(Objects.toString(output, "") + " ");
         } catch (IOException e) {
             e.printStackTrace();
         }
