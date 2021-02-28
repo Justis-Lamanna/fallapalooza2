@@ -13,6 +13,7 @@ public class ConfigService {
             try {
                 config = readConfig();
                 if(System.getProperty("sheet") != null) {
+                    System.out.println("Using custom sheet");
                     config.setSpreadsheetId(System.getProperty("sheet"));
                 }
             } catch (IOException ex) {

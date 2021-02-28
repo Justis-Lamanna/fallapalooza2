@@ -40,6 +40,9 @@ public class BracketBuilder {
 
     private static BracketMatchup.Team parseTeam(Team team, int roundIdx) {
         if(team == null) return BracketMatchup.Team.EMPTY_TEAM;
+        if(roundIdx == -1) {
+            roundIdx = team.getRounds().size() - 1;
+        }
         return new BracketMatchup.Team(team.getName(), team.getPlayers(), team.getRounds().get(roundIdx));
     }
 }
