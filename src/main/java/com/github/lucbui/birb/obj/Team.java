@@ -27,12 +27,10 @@ public class Team {
         for(int idx = 0; idx < rounds.size(); idx++) {
             Round round = rounds.get(idx);
             RoundState roundState = round.getRoundState();
-            if(roundState.isInProgress() || roundState.isNotStarted()) {
-                if(round.isEmpty()) {
-                    return rounds.get(Math.max(0, idx - 1));
-                } else {
-                    return round;
-                }
+            if(roundState.isInProgress()) {
+                return round;
+            } else if(roundState.isNotStarted()) {
+                return rounds.get(Math.max(0, idx - 1));
             }
         }
         //Last round

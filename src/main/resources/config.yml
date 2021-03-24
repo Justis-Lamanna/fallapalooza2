@@ -1,4 +1,4 @@
-spreadsheetId: 1gyIPIDpG8p8bAclC7pdpqAlMoke2DYqgHa61hfBCIAw
+spreadsheetId: 1cvGTnt6UIBzLqQnRmPIRy6J5r6cRryvtABD4PyF5r3I
 numberOfTeams: 32
 playersPerTeam: 2
 
@@ -54,7 +54,7 @@ teamCard:
       col: 1
       direction: VERTICAL
   round:
-    episodeCount: [3, 3, 3, 3, 5]
+    episodeCount: [3, 3, 3, 4, 5]
     score:
       row: 2
       col: 5
